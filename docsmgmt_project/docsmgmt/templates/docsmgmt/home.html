@@ -1,0 +1,46 @@
+{% extends 'docsmgmt/base.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+<div class="row">
+    <div class="col-lg-4">
+        <center>
+        <img class="thumbnail" src="{% static 'images/image_1491048.jpg' %}">
+        <div class="box-element product">
+            <hr>
+            <a  class="btn btn-warning btn-sm element-font" href="{% url 'unread' %}">เอกสารใหม่</a>
+            <h4 style="float: right"><strong id="doc-total">{{unread_count}}</strong></h4>
+
+        </div>
+    </center>
+    </div>
+
+    <div class="col-lg-4">
+        <center>
+        <img class="thumbnail" src="{% static 'images/image_1491048.jpg' %}">
+        <div class="box-element product">
+            <hr>
+            <a  class="btn btn-success btn-sm element-font" href="{% url 'showaccepted' %}">รับทราบแล้ว</a>
+            <!--
+            <h4 style="float: right"><strong>{{readed_count}}</strong></h4>
+            -->
+            
+        </div>
+    </center>
+    </div>
+
+    <div class="col-lg-4">
+        <center>
+        <img class="thumbnail" src="{% static 'images/image_1491048.jpg' %}">
+        <div class="box-element product">
+            <hr>
+            <a  class="btn btn-info btn-sm element-font" href="{% url 'showbydept' %}">เอกสารทั้งหมด</a>
+        </div>
+    </center>
+    </div>
+</div>
+{% else %}
+<p>You are not logged in</p>
+<a href="{% url 'login' %}">login</a>
+{% endif %}
+{% endblock %}

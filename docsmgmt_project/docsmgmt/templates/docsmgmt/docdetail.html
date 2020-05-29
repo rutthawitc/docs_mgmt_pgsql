@@ -1,0 +1,102 @@
+{% extends 'docsmgmt/base.html' %}
+{% load static %}
+{% block content %}
+<div class='container'>
+<hr>
+<div class="row justify-content-md-center">
+    <div class="col"></div>
+    <div class="col-5">
+        <h4>รายละเอียดเอกสารเลขที่ {{doc.doc_mtno}}</h4>
+        <table class="table table-striped table-bordered">
+        <tr>
+            <td>ผู้เกี่ยวข้อง</td><td class="alert alert-warning" role="alert">{{doc.get_role_display}}</td>
+        </tr>
+        <tr>
+            <td>เรื่อง</td><td>{{doc.doc_title}}</td>
+        </tr>
+        <tr>
+            <td>รายละเอียด</td><td>{{doc.doc_desc}}</td>
+        </tr>
+        <tr>
+            <td>ลงวันที่</td><td>{{doc.doc_date|date:'d/m/Y'}}</td>
+        </tr>
+        <tr>
+            <td>หน่วยงาน</td><td>{{doc.doc_dept}}</td>
+        </tr>
+        <tr>
+            <td>ไฟล์เอกสาร</td><td>
+              {% if doc.fileURL != '#' %}
+              <p class="alert alert-info" role="alert">
+                <a href="{{doc.fileURL}}" >
+                <img src="{% static 'images/sign-document-64.png' %}" height="25"/>
+                คลิกเพื่อโหลด
+              </a>
+              </p>
+               {% else %}
+               <p class="alert alert-success" role="alert">
+               ไม่มีไฟล์เอกสาร
+              </p>
+               {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td>ประเภท</td><td>{{doc.type_code.type_desc}}</td>
+        </tr>
+        <tr>
+            <td>นำเข้าวันที่</td><td>{{doc.upload_date|date:'d/m/Y'}} โดย {{doc.upload_by.user.first_name}}</td>
+        </tr>
+        <tr>
+          {% if usercount == 0 %}
+          <td>รับทราบแล้วจำนวน</td><td class="alert alert-warning" role="alert">ยังไม่มีผู้รับทราบเอกสาร</td>
+          {% else %}
+          <td>รับทราบแล้วจำนวน</td><td>{{usercount}} คน &nbsp;<a href="{% url 'listaccepted' doc.id %}">รายชื่อ</a></td>
+          {% endif %}
+        </tr>
+        <tr>
+          <td>สถานะ</td>
+          <td>
+            {% if isaccepted is not None %}
+            <p class="alert alert-success" role="alert">
+            <strong>รับทราบเอกสารแล้ว</strong>
+            </p>
+            {% else %}
+            <p class="alert alert-danger" role="alert">ยังไม่ได้รับทราบเอกสารนี้</p>
+            <button type="button" class="btn btn-success btn-sm accept-doc mb-1 mb-md-1" data-action="accept" data-document="{{doc.id}}" onclick="disableButton(this)">ทราบ</button>
+            {% endif %}
+          </td>
+        </tr>
+        </table>
+        <!--
+        <button class="element-font btn btn-success btn-sm" onclick="goBack();return false;">กลับหน้าที่แล้ว</button>
+        -->
+        <a class="btn btn-success btn-sm element-font" href="{% url 'home' %}">กลับหน้าหลัก</a>
+    </div>
+    <div class="col-6">
+       <h4>บันทึกเพิ่มเติม</h4>
+       <table class="table table-striped">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">บันทึกเพิ่มเติม</th>
+            <th scope="col">โดย</th>
+            <th scope="col">วันที่</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for cm in comments %}
+          <tr>
+            <td>{{ cm.comment }}</td>
+            <td>{{ cm.user.user.first_name }}</td>
+            <td>{{ cm.comment_date|date:'d/m/Y - H:m:s' }}</td> 
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div class="form-group">
+        <textarea class="form-control rounded-0" id="memo" rows="3" placeholder="บันทึกเพิ่มเติม"></textarea>
+      </div>
+      <button type="button" class="btn btn-success btn-sm add-comment mb-1 mb-md-1" data-action="comment" data-document="{{doc.id}}">เพิ่มบันทึก</button>
+      </textarea>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends 'docsmgmt/base.html' %}
+{% load static %}
+{% block content %}
+<div class='container'>
+<h3>เอกสารภายใน{{request.user.profile.dept}}</h3>
+<hr>
+{% if docscount %}
+<h4>เอกสารใหม่ทั้งหมด {{ docscount }} ฉบับ</h4>
+<table class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th scope="col">เลขที่</th>
+        <th scope="col">หัวข้อ</th>
+        <th scope="col">ประเภท</th>
+        <th scope="col">หน่วยงาน</th>
+        <th scope="col">วันที่</th>
+        <th scope="col">นำเข้าโดย</th>
+        <th scope="col">#</th>
+      </tr>
+    </thead>
+    {% for doc in docs %}
+    <tbody>
+      <tr>
+        <td>
+          {% if doc.fileURL != '#' %}
+          <a href="{{doc.fileURL}}">{{doc.doc_mtno}}</a>
+          <img src="{% static 'images/sign-document-64.png' %}" height="25"/>
+          {% else %}
+          {{doc.doc_mtno}}
+          {% endif %}
+        </td>
+        <td>{{doc.doc_title}}</td>
+        <td>{{doc.type_code.type_desc}}</td>
+        <td>{{doc.doc_dept}}</td>
+        <td>{{doc.doc_date|date:'d/m/Y'}}</td>
+        <td>{{doc.upload_by.user.first_name}}</td>
+        <td>
+            <button type="button" class="btn btn-success btn-sm accept-doc mb-1 mb-md-1" data-action="accept" data-document="{{doc.id}}">ทราบ</button>
+            <a href="{% url 'docdetail' doc.id %}" class="btn btn-info btn-sm mb-1 mb-md-1" role="button">รายละเอียด</a>
+            <!--<button type="button" class="btn btn-primary btn-sm mb-1 mb-md-1">ตอบ</button> -->
+        </td>
+      </tr>
+    </tbody>
+    {% endfor %}
+  </table>
+<!--Paginator-->
+{% if docs.has_other_pages %}
+<ul class="pagination">
+  {% if docs.has_previous %}
+    <li><a href="?page={{ docs.previous_page_number }}">&laquo;</a></li>
+  {% else %}
+    <li class="disabled"><span>&laquo;</span></li>
+  {% endif %}
+  {% for i in docs.paginator.page_range %}
+    {% if docs.number == i %}
+      <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+    {% else %}
+      <li><a href="?page={{ i }}">{{ i }}</a></li>
+    {% endif %}
+  {% endfor %}
+  {% if docs.has_next %}
+    <li><a href="?page={{ docs.next_page_number }}">&raquo;</a></li>
+  {% else %}
+    <li class="disabled"><span>&raquo;</span></li>
+  {% endif %}
+</ul>
+{% endif %}
+<!--End of Paginator-->
+  {% else %}
+  <div class="alert alert-success text-center element-font" role="alert">
+     {{ error }}
+  </div>
+<a role="button" class="btn btn-primary" href="{% url 'home' %}">กลับหน้าหลัก</a>
+</div>
+{% endif %}
+</div>
+{% endblock %}
+

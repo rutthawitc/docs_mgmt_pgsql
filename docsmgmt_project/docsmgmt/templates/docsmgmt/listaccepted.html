@@ -1,0 +1,72 @@
+{% extends 'docsmgmt/base.html' %}
+{% load static %}
+{% block content %}
+<div class='container'>
+    <hr>
+    <div class="row justify-content-md-center">
+        <div class="col"></div>
+        <div class="col-5">
+            <h4>รายละเอียดเอกสาร</h4>
+            <table class="table table-striped table-bordered">
+            <tr>
+                <td>เลขที่</td><td>{{doc.doc_mtno}}</td>
+            </tr>
+            <tr>
+                <td>เรื่อง</td><td>{{doc.doc_title}}</td>
+            </tr>
+            <tr>
+                <td>รายละเอียด</td><td>{{doc.doc_desc}}</td>
+            </tr>
+            <tr>
+                <td>ลงวันที่</td><td>{{doc.doc_date|date:'d/m/Y'}}</td>
+            </tr>
+            <tr>
+                <td>หน่วยงาน</td><td>{{doc.doc_dept}}</td>
+            </tr>
+            <tr>
+                <td>ไฟล์เอกสาร</td><td>
+                  {% if doc.fileURL != '#' %}
+                  <p class="alert alert-info" role="alert">
+                    <a href="{{doc.fileURL}}" >
+                    <img src="{% static 'images/sign-document-64.png' %}" height="25"/>
+                    คลิกเพื่อโหลด
+                  </a>
+                  </p>
+                   {% else %}
+                   <p class="alert alert-success" role="alert">
+                   ไม่มีไฟล์เอกสาร
+                  </p>
+                   {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>ประเภท</td><td>{{doc.type_code.type_desc}}</td>
+            </tr>
+            <tr>
+                <td>นำเข้าวันที่</td><td>{{doc.last_update|date:'d/m/Y'}} โดย {{doc.upload_by.user.first_name}}</td>
+            </tr>
+            </table>
+            <button class="element-font btn btn-success btn-sm" onclick="goBack()">กลับหน้าที่แล้ว</button>
+        </div>
+        <div class="col-5">
+            <h4>รายชื่อผู้รับทราบ จำนวน {{usercount}} คน</h4>
+            <table class="table table-striped table-bordered">
+             <thead class="thead-dark">
+               <tr>
+                 <th scope="col" style="padding-left:25px;">ชื่อ</th>
+                 <th scope="col" style="width:  45%">วันที่</th>
+               </tr>
+             </thead>
+             <tbody>
+               {% for user in user_list %}
+               <tr>
+                 <td style="padding-left:35px;">{{ user.user.user.first_name }}&nbsp;&nbsp;{{ user.user.user.last_name }}</td>
+                 <td style="padding-left:8px;">{{ user.accepted_date|date:'d/m/Y  H:m:s' }}</td> 
+               </tr>
+               {% endfor %}
+             </tbody>
+           </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'docsmgmt/base.html' %}
+{% block content %}
+<div class='container'>
+<h1>All Docs</h1>
+<h4>เอกสารทั้งหมด {{ docs.count }} ฉบับ</h4>
+
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">เลขที่</th>
+        <th scope="col">หัวข้อ</th>
+        <th scope="col">ประเภท</th>
+        <th scope="col">วันที่</th>
+        <th scope="col">หน่วยงาน</th>
+      </tr>
+    </thead>
+    {% for doc in docs %}
+    <tbody>
+      <tr>
+        <td>{{doc.doc_mtno}}</td>
+        <td>{{doc.doc_title}}</td>
+        <td>{{doc.type_code.type_desc}}</td>
+        <td>{{doc.doc_date|date:'d/m/Y'}}</td>
+        <td>{{doc.doc_dept}}</td>
+      </tr>
+    </tbody>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}
+

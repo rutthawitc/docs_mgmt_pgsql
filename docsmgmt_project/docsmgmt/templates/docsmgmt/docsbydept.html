@@ -1,0 +1,63 @@
+{% extends 'docsmgmt/base.html' %}
+{% load static %}
+{% block content %}
+<div class='container'>
+<h3>เอกสารภายใน{{request.user.profile.dept}}</h3>
+<hr>
+<h5>เอกสารทั้งหมด {{ docscount }} ฉบับ</h5>
+<table class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th scope="col">เลขที่</th>
+        <th scope="col">หัวข้อ</th>
+        <th scope="col">ประเภท</th>
+        <th scope="col">วันที่เอกสาร</th>
+        <th scope="col">วันที่นำเข้า</th>
+        <th scope="col">หน่วยงาน</th>
+        <th scope="col">#</th>
+      </tr>
+    </thead>
+    {% for doc in docs %}
+    <tbody>
+      <tr>
+        <td>{{doc.doc_mtno}}</td>
+        <td>{{doc.doc_title}}</td>
+        <td>{{doc.type_code.type_desc}}</td>
+        <td>{{doc.doc_date|date:'d/m/Y'}}</td>
+        <td>{{doc.upload_date|date:'d/m/Y'}}</td>
+        <td>{{doc.doc_dept}}</td>
+        <td>
+            <a href="{% url 'docdetail' doc.id %}" class="btn btn-info btn-sm mb-1 mb-md-1" role="button">รายละเอียด</a>
+        </td>
+      </tr>
+    </tbody>
+    {% endfor %}
+  </table>
+
+  <!--Paginator-->
+  {% if docs.has_other_pages %}
+  <ul class="pagination">
+    {% if docs.has_previous %}
+      <li><a href="?page={{ docs.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in docs.paginator.page_range %}
+      {% if docs.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if docs.has_next %}
+      <li><a href="?page={{ docs.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+{% endif %}
+<!--End of Paginator-->
+
+</div>
+{% endblock %}
+

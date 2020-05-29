@@ -1,0 +1,50 @@
+{% extends 'docsmgmt/base.html' %}
+{% block content %}
+<div class="container">
+    <form class="Search" method="POST" align="center">
+        {% csrf_token %}
+        <input type="text" placeholder="ใส่หัวข้อหรือเลขที่หนังสือ" name="search">
+        <button type="submit" class="fa fa-search btn btn-success"> ค้นหา</button>
+        <a class="element-font btn btn-info btn-sm" href="{% url 'showbydept' %}">เอกสารทั้งหมด</a>
+    </form> 
+    {% if src == 'founded' %}
+    <h4><strong>ผลการค้นหาด้วย '{{search_title}}' เจอจำนวน {{rescount}} ฉบับ </strong></h4>
+    <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">เลขที่</th>
+            <th scope="col">หัวข้อ</th>
+            <th scope="col">ประเภท</th>
+            <th scope="col">วันที่</th>
+            <th scope="col">หน่วยงาน</th>
+            <th scope="col">#</th>
+          </tr>
+        </thead>
+        {% for rs in res %}
+        <tbody>
+          <tr>
+            <td>{{rs.doc_mtno}}</td>
+            <td>{{rs.doc_title}}</td>
+            <td>{{rs.type_code.type_desc}}</td>
+            <td>{{rs.doc_date|date:'d/m/Y'}}</td>
+            <td>{{rs.doc_dept}}</td>
+            <td>
+              <a href="{% url 'docdetail' rs.id %}" class="btn btn-info btn-sm mb-1 mb-md-1" role="button">รายละเอียด</a>
+          </td>
+          </tr>
+        </tbody>
+        {% endfor %}
+      </table>
+      {% elif src == 'notfound' %}
+      <div class="alert alert-warning text-center element-font" role="alert">
+         ไม่พบข้อมูล
+      </div>
+      {% else %}
+      <div class="alert alert-info text-center element-font" role="alert">
+         กรุณากรอกข้อมูล
+      </div>
+      {% endif %}
+
+</div>
+
+{% endblock %}

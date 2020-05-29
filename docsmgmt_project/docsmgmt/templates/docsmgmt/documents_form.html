@@ -1,0 +1,41 @@
+{% extends 'docsmgmt/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container">
+  <form method="post" novalidate>
+    {% csrf_token %}
+    <div class="form-row">
+      <div class="form-group col-md-4 mb-0">
+        {{ form.type_code|as_crispy_field }}
+      </div>
+      <div class="form-group col-md-0 mb-0">
+        {{ form.doc_mtno|as_crispy_field }}
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-4 mb-0">
+        {{ form.doc_title|as_crispy_field }}
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6 mb-0">
+        {{ form.doc_desc|as_crispy_field }}
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-4 mb-0">
+        {{ form.doc_date|as_crispy_field }}
+      </div>
+      <div class="form-group col-md-0 mb-0">
+        {{ form.doc_dept|as_crispy_field }}
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6 mb-0">
+        {{ form.doc_file|as_crispy_field }}
+      </div>
+    </div>
+    <button type="submit" class="btn btn-success">Save Document</button>
+  </form>
+</div>
+{% endblock %}
